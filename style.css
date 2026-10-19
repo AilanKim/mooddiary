@@ -1,24 +1,18 @@
-/* ==========================================================================
-   CSS VARIABLE DEFINITIONS (:ROOT CENTRIC DESIGN)
-   ========================================================================== */
+
 :root {
-    /* Color Palette - Frost Blue & Sage Green Accent */
     --color-bg-start: #0f172a;
     --color-bg-mid: #1e293b;
     --color-bg-end: #162a2c;
 
-    /* Soft Pale Blue & Frost Surface */
     --color-frost-surface: rgba(224, 242, 254, 0.06);
     --color-frost-surface-hover: rgba(224, 242, 254, 0.12);
     --color-frost-border: rgba(186, 230, 253, 0.18);
     --color-frost-border-active: rgba(153, 209, 189, 0.5);
 
-    /* Text Colors */
     --color-text-main: #f0f9ff;
     --color-text-muted: #cbd5e1;
     --color-text-dim: #7d93a8;
 
-    /* Accent Spectrum (Pale Blue & Sage Green) */
     --color-accent-blue: #7dd3fc;
     --color-accent-blue-soft: #bae6fd;
     --color-accent-sage: #94d3a2;
@@ -28,14 +22,12 @@
     --color-danger: #f87171;
     --color-danger-bg: rgba(248, 113, 113, 0.15);
 
-    /* Mood Colors */
     --mood-cozy: #f97316;
     --mood-calm: #7dd3fc;
     --mood-serene: #94d3a2;
     --mood-gloomy: #818cf8;
     --mood-joyful: #fde047;
 
-    /* Typography */
     --font-family-main: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
     --font-size-xs: 0.75rem;
     --font-size-sm: 0.875rem;
@@ -43,22 +35,17 @@
     --font-size-lg: 1.25rem;
     --font-size-xl: 1.75rem;
 
-    /* Spacing & Radii */
     --radius-sm: 10px;
     --radius-md: 16px;
     --radius-lg: 24px;
     --radius-full: 9999px;
 
-  /* Transitions & Shadows */
     --transition-fast: 0.2s ease;
     --transition-normal: 0.3s cubic-bezier(0.16, 1, 0.3, 1);
     --shadow-glass: 0 20px 40px rgba(0, 0, 0, 0.4);
     --blur-glass: blur(16px);
 }
 
-/* ==========================================================================
-   BASE & RESET STYLES
-   ========================================================================== */
 *, *::before, *::after {
     box-sizing: border-box;
     margin: 0;
@@ -76,15 +63,12 @@ body {
     padding: 2rem 1rem;
 }
 
-/* ==========================================================================
-   LAYOUT CONTAINERS
-   ========================================================================== */
 .app-container {
     width: 100%;
     max-width: 1000px;
     zoom: 0.9;
     display: flex;
-    flex-direction: column; /* 요소들을 위에서 아래로 세로 배치 */
+    flex-direction: column; 
     gap: 1.5rem;
 }
 
@@ -132,9 +116,6 @@ body {
     }
 }
 
-/* ==========================================================================
-   PANEL STYLES
-   ========================================================================== */
 .panel {
     background: var(--color-frost-surface);
     backdrop-filter: var(--blur-glass);
@@ -148,9 +129,6 @@ body {
     gap: 1.25rem;
 }
 
-/* ==========================================================================
-   CALENDAR
-   ========================================================================== */
 .calendar-header {
     display: flex;
     justify-content: space-between;
@@ -251,7 +229,6 @@ body {
     line-height: 1;
 }
 
-/* Quote Card with Sage Border Accent */
 .quote-card {
     margin-top: auto;
     padding: 1rem;
@@ -275,9 +252,6 @@ body {
     text-align: right;
 }
 
-/* ==========================================================================
-   DETAILS PANEL
-   ========================================================================== */
 .date-badge {
     display: flex;
     align-items: center;
@@ -420,7 +394,6 @@ body {
     display: none !important;
 }
 
-/* Stats */
 .stats-section {
     border-top: 1px solid var(--color-frost-border);
     padding-top: 1rem;
@@ -452,11 +425,8 @@ body {
     gap: 0.3rem;
 }
 
-/* ==========================================================================
-   FOOTER STYLES
-   ========================================================================== */
 .app-footer {
-    width: 100%;             /* 가로 전체 폭 차지 */
+    width: 100%;         
     text-align: center;
     padding: 1.5rem 0 0.5rem;
     border-top: 1px solid var(--color-frost-border);

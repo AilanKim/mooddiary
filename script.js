@@ -1,8 +1,3 @@
-/* ==========================================================================
-   WINTER MOOD DIARY - JAVASCRIPT LOGIC
-   ========================================================================== */
-
-// 1. Data Store Key & Config
 const MOOD_DATA_KEY = 'winter_mood_diary_entries';
 
 const MOODS = {
@@ -39,13 +34,11 @@ const WINTER_QUOTES = [
     { text: "오늘 하루도 수고 많았어, 차분하고 포근한 밤이 되기를 (Warm wishes for a cozy night).", author: "Winter Evening" }
 ];
 
-// 2. State Management
 let currentDate = new Date();
 let selectedDateStr = formatDateKey(new Date());
 let selectedMood = null;
 let entries = loadEntries();
 
-// 3. DOM Elements
 const currentMonthYearEl = document.getElementById('currentMonthYear');
 const calendarGridEl = document.getElementById('calendarGrid');
 const prevMonthBtn = document.getElementById('prevMonthBtn');
@@ -61,7 +54,6 @@ const statsContainerEl = document.getElementById('statsContainer');
 const quoteTextEl = document.getElementById('quoteText');
 const quoteAuthorEl = document.getElementById('quoteAuthor');
 
-// 4. Initialization
 document.addEventListener('DOMContentLoaded', () => {
     setupEventListeners();
     renderCalendar();
@@ -69,9 +61,8 @@ document.addEventListener('DOMContentLoaded', () => {
     updateRandomQuote();
 });
 
-// 5. Event Listeners Setup
 function setupEventListeners() {
-prevMonthBtn.addEventListener('click', () => {
+    prevMonthBtn.addEventListener('click', () => {
         currentDate.setMonth(currentDate.getMonth() - 1);
         renderCalendar();
         updateRandomQuote();
@@ -95,7 +86,6 @@ saveEntryBtn.addEventListener('click', saveCurrentEntry);
 deleteEntryBtn.addEventListener('click', deleteCurrentEntry);
 }
 
-// 6. Calendar Rendering (Monday Start Logic)
 function renderCalendar() {
 calendarGridEl.innerHTML = '';
 
@@ -112,11 +102,9 @@ const firstDayOfMonth = new Date(year, month, 1);
 const lastDayOfMonth = new Date(year, month + 1, 0);
 const totalDays = lastDayOfMonth.getDate();
 
-  // Convert Sunday (0) -> 6, Monday (1) -> 0 for Monday start
 let firstDayIndex = firstDayOfMonth.getDay() - 1;
 if (firstDayIndex === -1) firstDayIndex = 6;
 
-  // Empty leading slots
 for (let i = 0; i < firstDayIndex; i++) {
     const emptyCell = document.createElement('div');
     emptyCell.classList.add('calendar-day', 'calendar-day--empty');
@@ -152,7 +140,6 @@ for (let day = 1; day <= totalDays; day++) {
 renderMonthlyStats();
 }
 
-// 7. Date Selection Handler
 function selectDate(dateKey, scrollToDetails = false) {
     selectedDateStr = dateKey;
 
@@ -185,7 +172,6 @@ if (scrollToDetails && window.matchMedia('(max-width: 820px)').matches) {
 }
 }
 
-// 8. Save & Delete Handlers
 function saveCurrentEntry() {
 if (!selectedMood) {
     alert('Please select a mood icon before saving.');
@@ -219,7 +205,6 @@ function resetForm() {
     deleteEntryBtn.classList.add('hidden');
 }
 
-// 9. Monthly Stats
 function renderMonthlyStats() {
     statsContainerEl.innerHTML = '';
     const currentYear = currentDate.getFullYear();
@@ -250,7 +235,6 @@ Object.keys(entries).forEach(dateKey => {
     });
 }
 
-// 10. Helpers
 function updateRandomQuote() {
     const randomIndex = Math.floor(Math.random() * WINTER_QUOTES.length);
     const quote = WINTER_QUOTES[randomIndex];
