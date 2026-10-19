@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mood Diary</title>
+    <link rel="icon" type="image/png" sizes="192x192" href="images/icon/butter_mood_diary_icon_192x192.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="images/icon/butter_mood_diary_icon_180x180.png">
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="app-container">
+    <!-- Header -->
+    <header class="app-header">
+        <div class="brand">
+        <span class="brand__icon">❄️</span>
+        <h1 class="brand__title">Butter Mood Diary</h1>
+        </div>
+        <p class="brand__subtitle">Whispers of the season, recorded in quiet moments.</p>
+    </header>
+
+    <!-- Main Layout -->
+    <main class="app-main">
+        <!-- Left Column: Calendar & Random Quote -->
+        <section class="panel calendar-panel">
+        <div class="calendar-header">
+            <button type="button" id="prevMonthBtn" class="btn-icon" aria-label="Previous Month">&lt;</button>
+            <h2 id="currentMonthYear" class="calendar-header__title">January 2026</h2>
+            <button type="button" id="nextMonthBtn" class="btn-icon" aria-label="Next Month">&gt;</button>
+        </div>
+
+        <!-- Weekday Headers (Monday Start) -->
+        <div class="calendar-weekdays">
+            <span class="weekday">Mon</span>
+            <span class="weekday">Tue</span>
+            <span class="weekday">Wed</span>
+            <span class="weekday">Thu</span>
+            <span class="weekday">Fri</span>
+            <span class="weekday">Sat</span>
+            <span class="weekday weekend">Sun</span>
+        </div>
+
+        <!-- Days Grid -->
+        <div id="calendarGrid" class="calendar-grid"></div>
+
+        <!-- Random Seasonal Quote Box -->
+        <div class="quote-card">
+            <p id="quoteText" class="quote-card__text">"In the depth of winter, I finally learned that there was within me an invisible summer."</p>
+            <span id="quoteAuthor" class="quote-card__author">— Albert Camus</span>
+        </div>
+        </section>
+
+        <!-- Right Column: Entry Form & Analytics -->
+        <section class="panel details-panel">
+        <!-- Selected Date Indicator -->
+        <div class="date-badge">
+            <div class="date-badge__info">
+                <span class="date-badge__label">Selected Date</span>
+                <h3 id="selectedDateText" class="date-badge__value">Select a date</h3>
+            </div>
+            <img class="date-badge__image" src="images/butter_mood_diary.png" alt="Butter Mood Diary">
+        </div>
+
+        <!-- Mood Selector -->
+        <div class="mood-section">
+            <label class="section-label">How are you feeling today?</label>
+            <div class="mood-options">
+            <button type="button" class="mood-btn" data-mood="cozy" title="Cozy">
+                <span class="mood-btn__emoji">☕</span>
+                <span class="mood-btn__label">Cozy</span>
+            </button>
+            <button type="button" class="mood-btn" data-mood="normal" title="Normal">
+                <span class="mood-btn__emoji">🌿</span>
+                <span class="mood-btn__label">Normal</span>
+            </button>
+            <button type="button" class="mood-btn" data-mood="gloomy" title="Gloomy">
+                <span class="mood-btn__emoji">🌧️</span>
+                <span class="mood-btn__label">Gloomy</span>
+            </button>
+            <button type="button" class="mood-btn" data-mood="joyful" title="Joyful">
+                <span class="mood-btn__emoji">✨</span>
+                <span class="mood-btn__label">Joyful</span>
+            </button>
+            <button type="button" class="mood-btn" data-mood="happy" title="Happy">
+                <span class="mood-btn__emoji">🍀</span>
+                <span class="mood-btn__label">Happy</span>
+            </button>
+            <button type="button" class="mood-btn" data-mood="fatigue" title="Fatigue">
+                <span class="mood-btn__emoji">🛋️</span>
+                <span class="mood-btn__label">Fatigue</span>
+            </button>
+            <button type="button" class="mood-btn" data-mood="tired" title="Tired">
+                <span class="mood-btn__emoji">💤</span>
+                <span class="mood-btn__label">Tired</span>
+            </button>
+            <button type="button" class="mood-btn" data-mood="angry" title="Angry">
+                <span class="mood-btn__emoji">🔥</span>
+                <span class="mood-btn__label">Angry</span>
+            </button>
+            </div>
+        </div>
+
+        <!-- Note Input -->
+        <div class="note-section">
+            <label for="diaryNote" class="section-label">Thoughts & Memories</label>
+            <textarea id="diaryNote" class="diary-textarea" placeholder="Write down your quiet winter thoughts..."></textarea>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="action-bar">
+            <button type="button" id="saveEntryBtn" class="btn btn--primary">Save Entry</button>
+            <button type="button" id="deleteEntryBtn" class="btn btn--danger hidden">Delete</button>
+        </div>
+
+        <!-- Monthly Overview Stats -->
+        <div class="stats-section">
+            <h4 class="stats-section__title">Monthly Atmosphere</h4>
+            <div id="statsContainer" class="stats-list"></div>
+        </div>
+
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="app-footer">
+        <p class="app-footer__text">&copy; 2026 Winter Mood Diary. All rights reserved. ❄️ by butterwehas</p>
+    </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
