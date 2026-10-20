@@ -248,10 +248,26 @@ function renderSavedNotes() {
                     saveEntries();
                     renderSavedNotes();
                 }),
-                createNoteActionButton('Cancel', 'btn--secondary', () => {
+                createNoteActionButton('×', 'btn--secondary', () => {
                     editingNoteId = null;
                     renderSavedNotes();
-                })
+                }, 'Cancel editing'),
+                createNoteActionButton('×', 'btn--danger', () => {
+                    if (!confirm('Delete this entry?')) return;
+
+                    const entry = entries[selectedDateStr];
+                    entry.notes = entry.notes.filter(savedNote => savedNote.id !== note.id);
+                    entry.updatedAt = new Date().toISOString();
+                    if (entry.notes.length === 0) {
+                        delete entries[selectedDateStr];
+                        selectedMood = null;
+                        moodButtons.forEach(btn => btn.classList.remove('mood-btn--active'));
+                    }
+                    editingNoteId = null;
+                    saveEntries();
+                    renderSavedNotes();
+                    renderCalendar();
+                }, 'Delete entry')
             );
             noteCard.appendChild(actions);
         } else {
@@ -266,21 +282,6 @@ function renderSavedNotes() {
                 createNoteActionButton('Edit', 'btn--secondary', () => {
                     editingNoteId = note.id;
                     renderSavedNotes();
-                }),
-                createNoteActionButton('Delete', 'btn--danger', () => {
-                    if (!confirm('Delete this entry?')) return;
-
-                    const entry = entries[selectedDateStr];
-                    entry.notes = entry.notes.filter(savedNote => savedNote.id !== note.id);
-                    entry.updatedAt = new Date().toISOString();
-                    if (entry.notes.length === 0) {
-                        delete entries[selectedDateStr];
-                        selectedMood = null;
-                        moodButtons.forEach(btn => btn.classList.remove('mood-btn--active'));
-                    }
-                    saveEntries();
-                    renderSavedNotes();
-                    renderCalendar();
                 })
             );
             noteCard.appendChild(actions);
@@ -290,11 +291,13 @@ function renderSavedNotes() {
     });
 }
 
-function createNoteActionButton(label, styleClass, onClick) {
+function createNoteActionButton(label, styleClass, onClick, accessibleLabel = label) {
     const button = document.createElement('button');
     button.type = 'button';
     button.classList.add('btn', styleClass, 'saved-note__button');
     button.textContent = label;
+    button.setAttribute('aria-label', accessibleLabel);
+    button.title = accessibleLabel;
     button.addEventListener('click', onClick);
     return button;
 }

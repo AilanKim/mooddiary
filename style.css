@@ -350,6 +350,11 @@ body {
     transition: var(--transition-fast);
 }
 
+.diary-textarea::placeholder {
+    color: rgba(203, 213, 225, 0.45);
+    font-size: var(--font-size-xs);
+}
+
 .diary-textarea:focus {
     outline: none;
     border-color: var(--color-accent-sage);
@@ -450,15 +455,25 @@ body {
 
 .saved-note__actions {
     display: flex;
-    gap: 0.5rem;
-    width: 100%;
+    justify-content: flex-end;
+    gap: 0.35rem;
+    width: auto;
 }
 
 .saved-note__button {
     flex: 0 0 auto;
     min-width: 0;
-    padding: 0.35rem 0.65rem;
+    min-height: 1.7rem;
+    padding: 0.25rem 0.5rem;
     font-size: var(--font-size-xs);
+    line-height: 1;
+}
+
+.saved-note__button[aria-label="Cancel editing"],
+.saved-note__button[aria-label="Delete entry"] {
+    width: 1.7rem;
+    padding: 0;
+    font-size: var(--font-size-sm);
 }
 
 .hidden {
