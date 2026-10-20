@@ -1,6 +1,7 @@
 {
   "name": "Butter Mood Diary",
   "short_name": "Mood Diary",
+  "description": "나만의 기분 기록을 남겨 보아요.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
