@@ -37,6 +37,7 @@ const WINTER_QUOTES = [
 let currentDate = new Date();
 let selectedDateStr = formatDateKey(new Date());
 let selectedMood = null;
+let editingNoteId = null;
 let entries = loadEntries();
 
 const currentMonthYearEl = document.getElementById('currentMonthYear');
@@ -48,8 +49,8 @@ const selectedDateTextEl = document.getElementById('selectedDateText');
 const detailsPanelEl = document.querySelector('.details-panel');
 const diaryNoteEl = document.getElementById('diaryNote');
 const saveEntryBtn = document.getElementById('saveEntryBtn');
-const deleteEntryBtn = document.getElementById('deleteEntryBtn');
 const moodButtons = document.querySelectorAll('.mood-btn');
+const savedNotesListEl = document.getElementById('savedNotesList');
 const statsContainerEl = document.getElementById('statsContainer');
 const quoteTextEl = document.getElementById('quoteText');
 const quoteAuthorEl = document.getElementById('quoteAuthor');
@@ -83,7 +84,6 @@ moodButtons.forEach(btn => {
 });
 
 saveEntryBtn.addEventListener('click', saveCurrentEntry);
-deleteEntryBtn.addEventListener('click', deleteCurrentEntry);
 }
 
 function renderCalendar() {
@@ -142,6 +142,7 @@ renderMonthlyStats();
 
 function selectDate(dateKey, scrollToDetails = false) {
     selectedDateStr = dateKey;
+    editingNoteId = null;
 
 document.querySelectorAll('.calendar-day').forEach(cell => {
     cell.classList.remove('calendar-day--selected');
@@ -156,53 +157,146 @@ selectedDateTextEl.textContent = dateObj.toLocaleDateString('en-US', options);
 
 const entry = entries[dateKey];
 if (entry) {
-    selectedMood = entry.mood;
-    diaryNoteEl.value = entry.note || '';
+    selectedMood = null;
 
     moodButtons.forEach(btn => {
         btn.classList.toggle('mood-btn--active', btn.dataset.mood === entry.mood);
     });
-    deleteEntryBtn.classList.remove('hidden');
 } else {
-    resetForm();
+    clearForm();
 }
+diaryNoteEl.value = '';
+renderSavedNotes();
 
-if (scrollToDetails && window.matchMedia('(max-width: 820px)').matches) {
+if (scrollToDetails && window.matchMedia('(max-width: 900px)').matches) {
     detailsPanelEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 }
 
 function saveCurrentEntry() {
-if (!selectedMood) {
+const note = diaryNoteEl.value.trim();
+const existingEntry = entries[selectedDateStr];
+if (!selectedMood && !existingEntry?.mood) {
     alert('Please select a mood icon before saving.');
     return;
 }
+if (!note && !selectedMood) {
+    alert('Please write an entry or select a mood before saving.');
+    return;
+}
 
-entries[selectedDateStr] = {
-    mood: selectedMood,
-    note: diaryNoteEl.value.trim(),
-    updatedAt: new Date().toISOString()
-};
+const entry = existingEntry || { mood: null, notes: [] };
+if (selectedMood) entry.mood = selectedMood;
+if (note) {
+    entry.notes.push({
+        id: `${Date.now()}-${Math.random().toString(36).slice(2)}`,
+        text: note,
+        updatedAt: new Date().toISOString()
+    });
+}
+entry.updatedAt = new Date().toISOString();
+entries[selectedDateStr] = entry;
 
 saveEntries();
+diaryNoteEl.value = '';
+selectedMood = null;
+renderSavedNotes();
 renderCalendar();
-deleteEntryBtn.classList.remove('hidden');
 }
 
-function deleteCurrentEntry() {
-    if (confirm('Do you want to delete this mood log?')) {
-        delete entries[selectedDateStr];
-        saveEntries();
-        resetForm();
-        renderCalendar();
-    }
-}
-
-function resetForm() {
+function clearForm() {
     selectedMood = null;
     diaryNoteEl.value = '';
     moodButtons.forEach(btn => btn.classList.remove('mood-btn--active'));
-    deleteEntryBtn.classList.add('hidden');
+}
+
+function renderSavedNotes() {
+    savedNotesListEl.innerHTML = '';
+    const notes = entries[selectedDateStr]?.notes || [];
+    if (notes.length === 0) {
+        const emptyMessage = document.createElement('p');
+        emptyMessage.classList.add('saved-notes-empty');
+        emptyMessage.textContent = 'Your saved entries will appear here.';
+        savedNotesListEl.appendChild(emptyMessage);
+        return;
+    }
+
+    notes.forEach(note => {
+        const noteCard = document.createElement('article');
+        noteCard.classList.add('saved-note');
+
+        if (note.id === editingNoteId) {
+            const editor = document.createElement('textarea');
+            editor.classList.add('diary-textarea', 'saved-note__editor');
+            editor.value = note.text;
+            editor.setAttribute('aria-label', 'Edit entry');
+            noteCard.appendChild(editor);
+
+            const actions = document.createElement('div');
+            actions.classList.add('saved-note__actions');
+            actions.append(
+                createNoteActionButton('Save', 'btn--primary', () => {
+                    const text = editor.value.trim();
+                    if (!text) {
+                        alert('Entry cannot be empty.');
+                        return;
+                    }
+                    note.text = text;
+                    note.updatedAt = new Date().toISOString();
+                    entries[selectedDateStr].updatedAt = note.updatedAt;
+                    editingNoteId = null;
+                    saveEntries();
+                    renderSavedNotes();
+                }),
+                createNoteActionButton('Cancel', 'btn--secondary', () => {
+                    editingNoteId = null;
+                    renderSavedNotes();
+                })
+            );
+            noteCard.appendChild(actions);
+        } else {
+            const text = document.createElement('p');
+            text.classList.add('saved-note__text');
+            text.textContent = note.text;
+            noteCard.appendChild(text);
+
+            const actions = document.createElement('div');
+            actions.classList.add('saved-note__actions');
+            actions.append(
+                createNoteActionButton('Edit', 'btn--secondary', () => {
+                    editingNoteId = note.id;
+                    renderSavedNotes();
+                }),
+                createNoteActionButton('Delete', 'btn--danger', () => {
+                    if (!confirm('Delete this entry?')) return;
+
+                    const entry = entries[selectedDateStr];
+                    entry.notes = entry.notes.filter(savedNote => savedNote.id !== note.id);
+                    entry.updatedAt = new Date().toISOString();
+                    if (entry.notes.length === 0) {
+                        delete entries[selectedDateStr];
+                        selectedMood = null;
+                        moodButtons.forEach(btn => btn.classList.remove('mood-btn--active'));
+                    }
+                    saveEntries();
+                    renderSavedNotes();
+                    renderCalendar();
+                })
+            );
+            noteCard.appendChild(actions);
+        }
+
+        savedNotesListEl.appendChild(noteCard);
+    });
+}
+
+function createNoteActionButton(label, styleClass, onClick) {
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.classList.add('btn', styleClass, 'saved-note__button');
+    button.textContent = label;
+    button.addEventListener('click', onClick);
+    return button;
 }
 
 function renderMonthlyStats() {
@@ -251,7 +345,16 @@ function formatDateKey(date) {
 
 function loadEntries() {
     const saved = localStorage.getItem(MOOD_DATA_KEY);
-    return saved ? JSON.parse(saved) : {};
+    const loadedEntries = saved ? JSON.parse(saved) : {};
+    Object.values(loadedEntries).forEach(entry => {
+        if (!Array.isArray(entry.notes)) {
+            entry.notes = entry.note
+                ? [{ id: `${Date.now()}-${Math.random().toString(36).slice(2)}`, text: entry.note, updatedAt: entry.updatedAt }]
+                : [];
+            delete entry.note;
+        }
+    });
+    return loadedEntries;
 }
 
 function saveEntries() {
