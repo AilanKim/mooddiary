@@ -52,13 +52,23 @@
     padding: 0;
 }
 
+html {
+    min-height: 100%;
+    background-color: var(--color-bg-start);
+}
+
 body {
     font-family: var(--font-family-main);
-    background: linear-gradient(135deg, var(--color-bg-start), var(--color-bg-mid) 50%, var(--color-bg-end));
+    background-color: var(--color-bg-start);
     color: var(--color-text-main);
     min-height: 100vh;
+    min-height: 100svh;
     display: block;
-    padding: 2rem 1rem;
+    padding:
+        calc(2rem + env(safe-area-inset-top))
+        calc(1rem + env(safe-area-inset-right))
+        calc(2rem + env(safe-area-inset-bottom))
+        calc(1rem + env(safe-area-inset-left));
 }
 
 .app-container {
